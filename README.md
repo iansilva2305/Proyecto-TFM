@@ -79,7 +79,8 @@ Si K=2:
 - El histograma muestra cuántos clientes tienen 1, 2, 3... transacciones.
 - Una línea roja indica el valor de K elegido.
 
-![Ejemplo K-anonimato](https://raw.githubusercontent.com/iansilva2305/Proyecto-TFM/main/assets/ejemplo_k_anonimato.png)
+![Ejemplo K-anonimato](assets/ejemplo_k_anonimato.png)
+> Imagen generada automáticamente para fines ilustrativos.
 
 ---
 
@@ -105,7 +106,8 @@ Si L=2:
 - La tabla muestra para cada grupo cuántos tipos diferentes tiene y si cumple L-diversidad.
 - Los grupos que no cumplen se resaltan en rojo.
 
-![Ejemplo L-diversidad](https://raw.githubusercontent.com/iansilva2305/Proyecto-TFM/main/assets/ejemplo_l_diversidad.png)
+![Ejemplo L-diversidad](assets/ejemplo_l_diversidad.png)
+> Imagen generada automáticamente para fines ilustrativos.
 
 ---
 
@@ -144,7 +146,8 @@ Puedes ajustar ε en la barra lateral y ver cómo cambia la explicación en la p
 
 Una gráfica donde se compara la tasa de verdaderos positivos vs. falsos positivos. El área bajo la curva (AUC) indica la calidad del modelo.
 
-![Ejemplo ROC](https://raw.githubusercontent.com/iansilva2305/Proyecto-TFM/main/assets/ejemplo_roc.png)
+![Ejemplo ROC](assets/ejemplo_roc.png)
+> Imagen generada automáticamente para fines ilustrativos.
 
 ---
 
