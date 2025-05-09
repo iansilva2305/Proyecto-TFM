@@ -119,165 +119,148 @@ df_logs = pd.DataFrame(logs)
 
 # --- NUEVO DISEÑO DE DASHBOARD ---
 
-# TABS PRINCIPALES
-main_tabs = st.tabs([
-    "Executive Summary",
-    "Anonymization Techniques",
-    "Model Performance",
-    "Privacy-Utility Tradeoff"
+# --- PESTAÑAS PRINCIPALES ---
+tabs = st.tabs([
+    "Resumen Ejecutivo",
+    "Técnicas de Anonimización",
+    "Desempeño del Modelo",
+    "Balance Privacidad-Utilidad"
 ])
 
-# --- EXECUTIVE SUMMARY ---
-with main_tabs[0]:
-    st.markdown("""
+# --- RESUMEN EJECUTIVO ---
+with tabs[0]:
+    st.markdown(f"""
     <div style='background-color:#2346a0;padding:18px 12px 10px 12px;border-radius:10px;'>
-    <h2 style='color:white;margin-bottom:0;'>GDPR Compliance Dashboard - PaySim1</h2>
-    <p style='color:white;margin-top:4px;font-size:18px;'>Visualizing the balance between privacy protection and model utility in fraud detection</p>
+    <h2 style='color:white;margin-bottom:0;'>Dashboard de Cumplimiento GDPR - PaySim1</h2>
+    <p style='color:white;margin-top:4px;font-size:18px;'>Visualiza el equilibrio entre protección de privacidad y utilidad del modelo en detección de fraude</p>
     </div>
     """, unsafe_allow_html=True)
     st.write("")
-    summary_tabs = st.tabs([
-        "Executive Summary",
-        "Anonymization Techniques",
-        "Model Performance",
-        "Privacy-Utility Tradeoff"
-    ])
-    # Métricas principales
-    st.subheader("Privacy Metrics")
+    st.subheader("Métricas de Privacidad")
     col1, col2, col3, col4 = st.columns(4)
-    col1.metric("k-anonymity", k_actual)
-    col2.metric("l-diversity", l_actual)
-    col3.metric("ε (epsilon)", f"{epsilon_actual:.1f}")
-    col4.metric("Reidentification Risk", "Low", delta=None, delta_color="normal")
-    st.info("These metrics indicate strong privacy protection while maintaining model utility. K-anonymity=10 ensures each record is indistinguishable from at least 9 others.")
-    # Comparación de desempeño
-    st.subheader("Model Performance Comparison")
-    st.markdown("""
-    <style>.bar-red{background:#f44336;color:white;padding:4px 8px;border-radius:6px;}.bar-green{background:#4caf50;color:white;padding:4px 8px;border-radius:6px;}</style>
-    """, unsafe_allow_html=True)
-    st.markdown("""
+    col1.metric("K-anonimato", k_actual)
+    col2.metric("L-diversidad", l_actual)
+    col3.metric("Épsilon (DP)", f"{epsilon_actual:.1f}")
+    col4.metric("Riesgo de Reidentificación", "Bajo", delta=None, delta_color="normal")
+    st.info(f"Estas métricas indican un alto nivel de protección de privacidad manteniendo la utilidad del modelo. K-anonimato={k_actual} asegura que cada registro es indistinguible de al menos {k_actual-1} otros.")
+    # Métricas de desempeño dinámicas (simulación)
+    st.subheader("Comparación de Desempeño del Modelo")
+    # Simulación básica de impacto (puedes conectar con tus resultados reales)
+    precision_sin = 85.4
+    recall_sin = 82.1
+    f1_sin = 83.2
+    precision_con = max(precision_sin - (k_actual-10)*0.2 - (l_actual-2)*0.2 - (epsilon_actual-2)*0.3, 60)
+    recall_con = max(recall_sin - (k_actual-10)*0.15 - (l_actual-2)*0.15 - (epsilon_actual-2)*0.2, 55)
+    f1_con = max(f1_sin - (k_actual-10)*0.15 - (l_actual-2)*0.2 - (epsilon_actual-2)*0.2, 55)
+    st.markdown(f"""
     <div>
-    <b>Precision</b><br>
-    <span class='bar-red'>85.4%</span> <span class='bar-green'>78.9%</span><br>
-    <b>Sensitivity (Recall)</b><br>
-    <span class='bar-red'>82.1%</span> <span class='bar-green'>76.4%</span><br>
+    <b>Precisión</b><br>
+    <span style='background:#f44336;color:white;padding:4px 8px;border-radius:6px;'> {precision_sin:.1f}% </span>
+    <span style='background:#4caf50;color:white;padding:4px 8px;border-radius:6px;'> {precision_con:.1f}% </span><br>
+    <b>Sensibilidad (Recall)</b><br>
+    <span style='background:#f44336;color:white;padding:4px 8px;border-radius:6px;'> {recall_sin:.1f}% </span>
+    <span style='background:#4caf50;color:white;padding:4px 8px;border-radius:6px;'> {recall_con:.1f}% </span><br>
     <b>F1-score</b><br>
-    <span class='bar-red'>83.2%</span> <span class='bar-green'>77.1%</span>
+    <span style='background:#f44336;color:white;padding:4px 8px;border-radius:6px;'> {f1_sin:.1f}% </span>
+    <span style='background:#4caf50;color:white;padding:4px 8px;border-radius:6px;'> {f1_con:.1f}% </span>
     </div>
     """, unsafe_allow_html=True)
-    st.info("The model with anonymization and differential privacy shows a moderate reduction in performance (6.5 percentage points in precision) but provides significantly enhanced privacy protection and GDPR compliance.")
+    st.info("El modelo con anonimización y privacidad diferencial muestra una reducción moderada en desempeño pero una mejora significativa en protección de privacidad y cumplimiento GDPR.")
 
-# --- ANONYMIZATION TECHNIQUES ---
-with main_tabs[1]:
-    st.markdown("""
+# --- TÉCNICAS DE ANONIMIZACIÓN ---
+with tabs[1]:
+    st.markdown(f"""
     <div style='background-color:#2346a0;padding:18px 12px 10px 12px;border-radius:10px;'>
-    <h2 style='color:white;margin-bottom:0;'>GDPR Compliance Dashboard - PaySim1</h2>
-    <p style='color:white;margin-top:4px;font-size:18px;'>Visualizing the balance between privacy protection and model utility in fraud detection</p>
+    <h2 style='color:white;margin-bottom:0;'>Técnicas de Anonimización</h2>
+    <p style='color:white;margin-top:4px;font-size:18px;'>Aplicación de métodos para proteger la identidad y los datos sensibles según los parámetros seleccionados.</p>
     </div>
     """, unsafe_allow_html=True)
     st.write("")
-    st.subheader("Pseudonymization with SHA-256")
-    st.write("This technique replaces direct identifiers with irreversible hash values.")
+    st.subheader("Seudonimización con SHA-256")
+    st.write("Esta técnica reemplaza identificadores directos por valores hash irreversibles.")
     st.table(pd.DataFrame({
-        'Original ID': ['C1231006815', 'C1666544295', 'C1305484615'],
-        'Hashed ID (SHA-256)': [
+        'ID Original': ['C1231006815', 'C1666544295', 'C1305484615'],
+        'ID Hash (SHA-256)': [
             '8a7b5b0e7a4c2d3f19a8d7c6b5a4c3d2b1a0e9f...',
             '3e2d10b9a87e6fd5c4b3a2f1e0c9b7a6f5e4d...',
             '7c222fb2927d828af22f592134e8932480637c0d...'
         ]
     }))
-    st.info("Pseudonymization with SHA-256 ensures that original account identifiers cannot be reversed, protecting individual identity while maintaining the ability to track unique accounts.")
-    st.subheader(f"k-anonymity (k={k_actual})")
-    st.write("k-anonymity ensures that each record cannot be distinguished from at least k-1 other records.")
-    st.markdown("**Before k-anonymity**")
-    st.table(pd.DataFrame({
-        'amount_group': [500, 7500, 25000],
-        'step_group': [1, 5, 7],
-        'group': ['0-1K', '5K-10K', '10K-50K'],
-        'period': ['morning', 'morning', 'afternoon']
-    }))
-    st.markdown("**After k-anonymity**")
-    st.table(pd.DataFrame({
-        'amount_group': ['0-1K', '5K-10K', '10K-50K'],
-        'step_group': ['morning', 'morning', 'afternoon'],
-        'count': [12, 15, 10]
-    }))
-    st.info("k-anonymity was implemented by grouping numerical attributes into broader categories. This ensures that each combination of quasi-identifiers appears at least k times in the dataset.")
-    st.subheader(f"l-diversity (l={l_actual})")
-    st.write("l-diversity ensures that sensitive attributes have sufficient diversity within each k-anonymous group.")
-    st.table(pd.DataFrame({
-        'Group ID': ['Group 1 (1K-5K, morning)', 'Group 2 (5K-10K, afternoon)', 'Group 3 (10K-50K, morning)'],
-        'Group Size': [12, 15, 10],
-        'Distinct Type Values': ['3 (PAYMENT, TRANSFER, CASH_OUT)', '2 (PAYMENT, CASH_OUT)', '2 (TRANSFER, PAYMENT)'],
-        'l-diversity Met?': ['Yes', 'Yes', 'Yes']
-    }))
-    st.info("l-diversity ensures that sensitive attributes like transaction type have at least l distinct values within each k-anonymous group, protecting against attribute disclosure attacks.")
-    st.subheader(f"Differential Privacy (ε={epsilon_actual:.1f})")
-    st.write("Differential privacy adds controlled mathematical noise to protect individual data points while maintaining statistical utility.")
-    st.slider("ε (Epsilon) Value", min_value=0.1, max_value=10.0, value=epsilon_actual, step=0.1)
-    st.info("Differential privacy is applied during model training, not data preprocessing. It ensures that the model does not memorize individual records while maintaining good overall performance.")
+    st.info("La seudonimización con SHA-256 asegura que los identificadores originales no puedan ser revertidos, protegiendo la identidad individual y permitiendo el seguimiento anónimo.")
+    st.subheader(f"K-anonimato (K={k_actual})")
+    st.write(f"El K-anonimato garantiza que cada registro no pueda distinguirse de al menos {k_actual-1} otros registros.")
+    st.markdown("**Distribución de K-anonimato en los datos actuales:**")
+    st.bar_chart(group_sizes)
+    st.subheader(f"L-diversidad (L={l_actual})")
+    st.write(f"La L-diversidad asegura que haya al menos {l_actual} valores sensibles distintos en cada grupo de anonimato.")
+    st.markdown("**Tabla de L-diversidad por grupo:**")
+    st.dataframe(l_diversity_data, use_container_width=True)
+    st.subheader(f"Privacidad Diferencial (Épsilon={epsilon_actual:.1f})")
+    st.write(f"La privacidad diferencial añade ruido controlado a los datos o resultados, dificultando la reidentificación individual. Un valor de épsilon más bajo implica mayor privacidad pero menor utilidad potencial.")
+    st.info(f"Todos los métodos anteriores se aplican según los parámetros seleccionados en la barra lateral. Puedes ajustar K, L y épsilon para observar el impacto en la protección y utilidad de los datos.")
 
-# --- MODEL PERFORMANCE ---
-with main_tabs[2]:
-    st.markdown("""
+# --- DESEMPEÑO DEL MODELO ---
+with tabs[2]:
+    st.markdown(f"""
     <div style='background-color:#2346a0;padding:18px 12px 10px 12px;border-radius:10px;'>
-    <h2 style='color:white;margin-bottom:0;'>GDPR Compliance Dashboard - PaySim1</h2>
-    <p style='color:white;margin-top:4px;font-size:18px;'>Visualizing the balance between privacy protection and model utility in fraud detection</p>
+    <h2 style='color:white;margin-bottom:0;'>Desempeño del Modelo</h2>
+    <p style='color:white;margin-top:4px;font-size:18px;'>Comparativa de desempeño antes y después de la anonimización y privacidad diferencial.</p>
     </div>
     """, unsafe_allow_html=True)
     st.write("")
-    st.subheader("Confusion Matrices")
+    st.subheader("Matrices de Confusión")
     col1, col2 = st.columns(2)
     with col1:
-        st.markdown("**Without Anonymization**")
+        st.markdown("**Sin anonimización**")
         st.table(pd.DataFrame({
-            'Predicted Non-Fraud': [950, 35],
-            'Predicted Fraud': [15, 160]
-        }, index=['Actual Non-Fraud', 'Actual Fraud']))
-        st.markdown("**Precision: 91.4%<br>Recall: 82.1%**", unsafe_allow_html=True)
+            'No Fraude': [950, 35],
+            'Fraude': [15, 160]
+        }, index=['No Fraude Real', 'Fraude Real']))
+        st.markdown("**Precisión: 91.4%<br>Sensibilidad: 82.1%**", unsafe_allow_html=True)
     with col2:
-        st.markdown("**With Anonymization & DP**")
+        st.markdown("**Con anonimización y DP**")
         st.table(pd.DataFrame({
-            'Predicted Non-Fraud': [940, 45],
-            'Predicted Fraud': [25, 150]
-        }, index=['Actual Non-Fraud', 'Actual Fraud']))
-        st.markdown("**Precision: 85.7%<br>Recall: 76.9%**", unsafe_allow_html=True)
-    st.info("The confusion matrices show that the anonymized model has slightly higher false positive and false negative rates, which explains the drop in precision and recall.")
-    st.subheader("Feature Importance")
+            'No Fraude': [940, 45],
+            'Fraude': [25, 150]
+        }, index=['No Fraude Real', 'Fraude Real']))
+        st.markdown("**Precisión: 85.7%<br>Sensibilidad: 76.9%**", unsafe_allow_html=True)
+    st.info("Las matrices de confusión muestran un leve aumento en falsos positivos y negativos tras anonimizar y aplicar privacidad diferencial, lo que explica la reducción en precisión y sensibilidad.")
+    st.subheader("Importancia de Variables")
     col1, col2 = st.columns(2)
     with col1:
-        st.markdown("**Without Anonymization**")
+        st.markdown("**Sin anonimización**")
         st.progress(32, text="amount (32%)")
         st.progress(23, text="type (23%)")
         st.progress(15, text="step (15%)")
     with col2:
-        st.markdown("**With Anonymization & DP**")
+        st.markdown("**Con anonimización y DP**")
         st.progress(29, text="amount_group (29%)")
         st.progress(25, text="type (25%)")
         st.progress(14, text="step_group (14%)")
-    st.info("The feature importance analysis shows that the transaction type and amount remain the most important predictors in both models, with slight differences in importance.")
+    st.info("La importancia de variables muestra que el tipo y monto de la transacción siguen siendo los predictores más relevantes en ambos modelos, aunque con ligeras diferencias tras la anonimización.")
 
-# --- PRIVACY-UTILITY TRADEOFF ---
-with main_tabs[3]:
-    st.markdown("""
+# --- BALANCE PRIVACIDAD-UTILIDAD ---
+with tabs[3]:
+    st.markdown(f"""
     <div style='background-color:#2346a0;padding:18px 12px 10px 12px;border-radius:10px;'>
-    <h2 style='color:white;margin-bottom:0;'>GDPR Compliance Dashboard - PaySim1</h2>
-    <p style='color:white;margin-top:4px;font-size:18px;'>Visualizing the balance between privacy protection and model utility in fraud detection</p>
+    <h2 style='color:white;margin-bottom:0;'>Balance Privacidad-Utilidad</h2>
+    <p style='color:white;margin-top:4px;font-size:18px;'>Evalúa el equilibrio entre protección de datos y rendimiento del modelo según los parámetros seleccionados.</p>
     </div>
     """, unsafe_allow_html=True)
     st.write("")
-    st.subheader("Privacy-Utility Tradeoff")
-    col1, col2 = st.columns(2)
-    with col1:
-        st.metric("Accuracy Loss", "-6.5pp", delta="85.4% → 78.9%", delta_color="inverse")
-    with col2:
-        st.metric("Privacy Gain", "+High", delta="k=10, l=2, ε=2.0", delta_color="normal")
-    st.info("This tradeoff demonstrates that with carefully selected privacy parameters (k=10, l=2, ε=2.0), we can achieve strong privacy protection with acceptable performance impact (-6.5pp in precision).")
-    st.subheader("GDPR Compliance Assessment")
+    st.subheader("Indicadores de Cumplimiento y Utilidad")
+    # Cálculo simulado de cumplimiento y utilidad
+    gdpr_compliance = min(100, 60 + (k_actual-10)*1.2 + (l_actual-2)*2 + (2.5-epsilon_actual)*4)
+    model_utility = max(40, 80 - (k_actual-10)*1.3 - (l_actual-2)*1.5 - (2.5-epsilon_actual)*2)
+    st.progress(int(gdpr_compliance), text=f"Cumplimiento GDPR: {gdpr_compliance:.0f}%")
+    st.progress(int(model_utility), text=f"Utilidad del Modelo: {model_utility:.0f}%")
+    st.info("Un mayor nivel de privacidad suele implicar una menor utilidad del modelo. Ajusta los parámetros para encontrar el equilibrio óptimo para tu caso de uso.")
+    st.subheader("Evaluación de Cumplimiento GDPR")
     st.write("")
-    st.markdown("**Data Minimization (Art. 5.1.c)**")
+    st.markdown("**Minimización de Datos (Art. 5.1.c)**")
     st.progress(90)
-    st.markdown("Amount and step variables grouped into ranges")
+    st.markdown("Los datos se han minimizado según los parámetros de anonimización seleccionados.")
+    st.markdown("**Privacidad desde el Diseño (Art. 25)**")
     st.markdown("**Privacy by Design (Art. 25)**")
     st.progress(85)
     st.markdown("Differential privacy integrated in model training")
