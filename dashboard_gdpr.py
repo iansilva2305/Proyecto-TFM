@@ -5,12 +5,26 @@ import numpy as np
 from sklearn.metrics import confusion_matrix, roc_curve, auc
 
 # --- Cargar datos reales ---
-df = pd.read_csv('dataset/informacion_anonimizacion.csv')
+import os
+DATA_PATH = 'dataset/informacion_anonimizacion.csv'
+if not os.path.exists(DATA_PATH):
+    st.error(f"El archivo de datos `{DATA_PATH}` no se encuentra.\nPor favor, colócalo en la carpeta `dataset/` o revisa el README para más información.")
+    st.stop()
+df = pd.read_csv(DATA_PATH)
 
-# --- Parámetros generales (pueden calcularse a partir de los datos si es necesario) ---
-k_actual = 10
-l_actual = 2
-epsilon_actual = 2.0
+# --- Parámetros configurables desde la barra lateral ---
+st.sidebar.image("https://placehold.co/150x80/5cb85c/FFFFFF?text=GDPR", caption="Logo Placeholder")
+st.sidebar.info("Dashboard Conceptual - TFM Anonimización LLM/GDPR")
+st.sidebar.markdown("---")
+st.sidebar.header("Configura los Parámetros")
+k_actual = st.sidebar.slider("K-Anonimato", min_value=2, max_value=50, value=10, step=1, help="Tamaño mínimo de grupo para anonimato")
+l_actual = st.sidebar.slider("L-Diversidad", min_value=2, max_value=10, value=2, step=1, help="Diversidad mínima de valores sensibles por grupo")
+epsilon_actual = st.sidebar.number_input("Épsilon (DP)", min_value=0.1, max_value=10.0, value=2.0, step=0.1, help="Presupuesto de privacidad diferencial")
+st.sidebar.markdown("---")
+st.sidebar.header("Parámetros Seleccionados")
+st.sidebar.markdown(f"**K-Anonimato:** {k_actual}")
+st.sidebar.markdown(f"**L-Diversidad:** {l_actual}")
+st.sidebar.markdown(f"**Épsilon (DP):** {epsilon_actual:.1f}")
 
 # --- Ejemplo de cálculo de métricas reales ---
 # Aquí se asume que el dataset tiene columnas isFraud (etiqueta real) y algún resultado de predicción (simulado para ejemplo)
@@ -34,7 +48,7 @@ group_sizes = df.groupby('nameOrig').size().values
 # --- Ejemplo de tabla para l-diversidad ---
 l_diversity_data = df.groupby('nameOrig')['type'].nunique().reset_index()
 l_diversity_data.columns = ['Grupo ID', 'L-diversidad']
-l_diversity_data['Cumple L=2'] = l_diversity_data['L-diversidad'] >= l_actual
+l_diversity_data[f'Cumple L={l_actual}'] = l_diversity_data['L-diversidad'] >= l_actual
 
 # --- Logs ficticios para auditoría ---
 logs = [
@@ -71,7 +85,8 @@ with tab2:
     st.caption("Idealmente, no debería haber barras a la izquierda de la línea roja.")
 
     st.subheader(f"Verificación L-Diversidad (l={l_actual})")
-    st.dataframe(l_diversity_data.style.applymap(lambda x: 'color: red' if x is False else '', subset=['Cumple L=2']))
+    cumple_col = f'Cumple L={l_actual}'
+    st.dataframe(l_diversity_data.head(100).style.applymap(lambda x: 'color: red' if x is False else '', subset=[cumple_col]))
 
 with tab3:
     st.header("Privacidad Diferencial")
@@ -112,10 +127,3 @@ with tab5:
     st.dataframe(df_logs, use_container_width=True)
 
 # --- Barra lateral ---
-st.sidebar.image("https://placehold.co/150x80/5cb85c/FFFFFF?text=GDPR", caption="Logo Placeholder")
-st.sidebar.info("Dashboard Conceptual - TFM Anonimización LLM/GDPR")
-st.sidebar.markdown("---")
-st.sidebar.header("Parámetros Actuales")
-st.sidebar.markdown(f"**K-Anonimato:** {k_actual}")
-st.sidebar.markdown(f"**L-Diversidad:** {l_actual}")
-st.sidebar.markdown(f"**Épsilon (DP):** {epsilon_actual:.1f}")
