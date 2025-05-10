@@ -1,5 +1,24 @@
-streamlit
-pandas
-matplotlib
-scikit-learn
-numpy
+
+# Requisitos optimizados para MacBook Pro M2 Pro (macOS 15.4.1)
+
+# Core
+streamlit>=1.22.0    # Versión optimizada para ARM
+pandas>=1.5.3        # Con soporte para Apple Silicon
+numpy>=1.24.3        # Compilado para ARM64
+matplotlib>=3.7.1    # Con optimizaciones Retina
+scikit-learn>=1.2.2  # Optimizado para M2
+
+# Optimizaciones para rendimiento con Apple Silicon
+pyarrow>=12.0.0      # Para mejor rendimiento con Parquet
+zstandard>=0.20.0    # Compresión eficiente para M2
+fastparquet>=2023.4.0 # Para formatos columnar eficientes
+joblib>=1.2.0        # Paralelización para M2 Pro
+pillow>=9.5.0        # Optimizado para ARM
+
+# Visualización
+plotly>=5.14.1       # Gráficos interactivos optimizados
+kaleido>=0.2.1       # Exportación de gráficos Retina
+altair>=5.0.1        # Gráficos declarativos optimizados
+
+# No incluimos ydata-profiling ni streamlit-pandas-profiling
+# ya que generan problemas de memoria y rendimiento en datasets grandes
